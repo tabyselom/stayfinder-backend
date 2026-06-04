@@ -36,6 +36,13 @@ app.use(cors({
     origin: "*"
 }));
 
+console.log({
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER
+});
+
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
