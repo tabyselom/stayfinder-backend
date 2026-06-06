@@ -40,6 +40,7 @@ router.patch(
 router.patch(
     "/:id/reject",
     authMiddleware,
+    authorizeRoles("owner", "admin"),
     bookingController.rejectBooking
 );
 
