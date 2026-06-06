@@ -37,4 +37,12 @@ router.patch(
     bookingController.cancelBooking
 );
 
+router.patch(
+    "/:id/reject",
+    authMiddleware,
+    bookingController.rejectBooking
+);
+
+
+
 module.exports = router;

@@ -297,3 +297,50 @@ exports.cancelBooking = async (req, res) => {
         });
     }
 };
+
+exports.rejectBooking = async (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        const ownerId = req.user.id;
+
+        const [bookings] = await db.query(
+            `
+            SELECT b.id, p.owner_id
+            FROM bookings b
+            JOIN properties p ON b.property_id = p.id
+            WHERE b.id = ?
+            `,
+            [bookingId]
+        );
+
+        if (bookings.length === 0) {
+            return res.status(404).json({
+                message: "Booking not found"
+            });
+        }
+
+        if (bookings[0].owner_id !== ownerId) {
+            return res.status(403).json({
+                message: "You do not own this property"
+            });
+        }
+
+        await db.query(
+            `
+            UPDATE bookings
+            SET status = 'rejected'
+            WHERE id = ?
+            `,
+            [bookingId]
+        );
+
+        res.json({
+            message: "Booking rejected"
+        });
+
+    } catch (error) {
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};
