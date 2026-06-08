@@ -320,15 +320,39 @@ exports.hideProperty = async (req, res) => {
         });
     }
 };
-
+// ===================================
+// GET MY PROPERTIES
+// ===================================
 exports.getMyProperties = async (req, res) => {
     try {
+
+        if (!req.user || !req.user.id) {
+            return res.status(401).json({
+                message: "Unauthorized"
+            });
+        }
 
         const ownerId = req.user.id;
 
         const [properties] = await db.query(
             `
-            SELECT *
+            SELECT
+                id,
+                owner_id,
+                title,
+                description,
+                price,
+                house_size,
+                bedrooms,
+                kitchens,
+                bathrooms,
+                has_parking,
+                latitude,
+                longitude,
+                display_location,
+                image_url,
+                status,
+                created_at
             FROM properties
             WHERE owner_id = ?
             AND status != 'hidden'
@@ -337,12 +361,19 @@ exports.getMyProperties = async (req, res) => {
             [ownerId]
         );
 
-        res.json(properties);
+        res.status(200).json({
+            success: true,
+            total: properties.length,
+            properties
+        });
 
     } catch (error) {
+        console.error("Get My Properties Error:", error);
 
         res.status(500).json({
-            message: error.message
+            success: false,
+            message: "Failed to fetch properties",
+            error: error.message
         });
     }
 };

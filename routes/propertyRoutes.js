@@ -8,6 +8,12 @@ const authorizeRoles = require("../middleware/roleMiddleware");
 
 router.get("/", propertyController.getProperties);
 
+router.get(
+    "/my",
+    authMiddleware,
+    propertyController.getMyProperties
+);
+
 router.post(
     "/",
     authMiddleware,
@@ -17,10 +23,5 @@ router.post(
 );
 
 router.get("/:id", propertyController.getPropertyById);
-router.get(
-    "/my",
-    authMiddleware,
-    propertyController.getMyProperties
-);
 
 module.exports = router;
