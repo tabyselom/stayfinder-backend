@@ -377,3 +377,53 @@ exports.getMyProperties = async (req, res) => {
         });
     }
 };
+
+exports.updateProperty = async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const {
+            title,
+            description,
+            price,
+            bedrooms,
+            bathrooms,
+            kitchens
+        } = req.body;
+
+        await db.query(
+            `
+            UPDATE properties
+            SET
+                title = ?,
+                description = ?,
+                price = ?,
+                bedrooms = ?,
+                bathrooms = ?,
+                kitchens = ?
+            WHERE id = ?
+            `,
+            [
+                title,
+                description,
+                price,
+                bedrooms,
+                bathrooms,
+                kitchens,
+                id
+            ]
+        );
+
+        res.json({
+            message: "Property updated successfully"
+        });
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};

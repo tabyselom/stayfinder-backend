@@ -23,5 +23,10 @@ router.post(
 );
 
 router.get("/:id", propertyController.getPropertyById);
+router.put(
+    "/:id",
+    authMiddleware,
+    propertyController.updateProperty
+);
 
 module.exports = router;
