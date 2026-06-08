@@ -320,3 +320,29 @@ exports.hideProperty = async (req, res) => {
         });
     }
 };
+
+exports.getMyProperties = async (req, res) => {
+    try {
+
+        const ownerId = req.user.id;
+
+        const [properties] = await db.query(
+            `
+            SELECT *
+            FROM properties
+            WHERE owner_id = ?
+            AND status != 'hidden'
+            ORDER BY created_at DESC
+            `,
+            [ownerId]
+        );
+
+        res.json(properties);
+
+    } catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+    }
+};

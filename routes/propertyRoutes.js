@@ -17,5 +17,10 @@ router.post(
 );
 
 router.get("/:id", propertyController.getPropertyById);
+router.get(
+    "/my",
+    authMiddleware,
+    propertyController.getMyProperties
+);
 
 module.exports = router;
